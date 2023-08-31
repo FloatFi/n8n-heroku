@@ -1,0 +1,83 @@
+{
+  "name": "/notifications/patient/sign-up (v1)",
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "httpMethod": "POST",
+        "path": "notifications/patient/sign-up",
+        "options": {}
+      },
+      "id": "55c062a3-291a-456a-adfe-1107813ddd94",
+      "name": "Webhook listening at notifications/patient/sign-up",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        660,
+        360
+      ],
+      "webhookId": "cd42d77b-59ee-4726-9bca-b1b37fc73338",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "#new-patient-signups-staging",
+          "mode": "name"
+        },
+        "text": "=----------*New patient created:*----------\n*{{ $json.body.params.first_name }} {{ $json.body.params.last_name }}*\n<mailto:{{ $json.body.params.email }}|Email {{ $json.body.params.first_name }} {{ $json.body.params.last_name }}>\n*Patient Id*: {{ $json.body.params.id }} \n*DOB:*  {{ $json.body.params.DOB }}\n*Associated Clinician:* <{{ $json.body.params.associated_clinician_backoffice_url }}|{{ $json.body.params.associated_clinician_first_name }} {{ $json.body.params.associated_clinician_last_name }}>\n*Associated Clincician Id:* {{ $json.body.params.associated_clinician_id }}\n*Associated Provider Name:*  {{ $json.body.params.associated_provider }}\n*Provider Unit Application Status:* {{ $json.body.params.provider_unit_application_status }}\n*Insurance Carrier:*  {{ $json.body.params.insurance_carrier }}\n*Insurance Member Id:*  {{ $json.body.params.insurance_member_id }}\n*Policy Group Id:*  {{ $json.body.params.policy_group_id }}\n*Stripe Customer Id:*  {{ $json.body.params.stripe_customer_id }}",
+        "otherOptions": {}
+      },
+      "id": "669036be-e5f4-4e47-83cf-d9d61fa3f434",
+      "name": "Slack message in #new-patient-signups",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "position": [
+        920,
+        360
+      ],
+      "credentials": {
+        "slackApi": {
+          "id": "2",
+          "name": "Slack account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook listening at notifications/patient/sign-up": {
+      "main": [
+        [
+          {
+            "node": "Slack message in #new-patient-signups",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {},
+  "versionId": "d7fe6059-022f-4e40-a5d7-4acb65160365",
+  "id": "2",
+  "meta": {
+    "instanceId": "123e36f33f867f0a0fea9f64123a61d8b4f89d564456cce6220f4dcc4a619a07"
+  },
+  "tags": [
+    {
+      "createdAt": "2023-08-02T21:26:43.483Z",
+      "updatedAt": "2023-08-02T21:26:43.483Z",
+      "id": "1",
+      "name": "new-patient"
+    }
+  ]
+}

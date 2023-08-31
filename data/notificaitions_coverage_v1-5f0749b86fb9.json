@@ -1,0 +1,85 @@
+{
+  "name": "/notifications/coverage (v1)",
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "httpMethod": "POST",
+        "path": "/notifications/coverage",
+        "options": {
+          "rawBody": false
+        }
+      },
+      "id": "7cfe2526-0a01-49cf-b9e5-38034b0cbe8e",
+      "name": "Webhook listening at POST /coverage",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        360,
+        260
+      ],
+      "webhookId": "c2cb37b0-faba-4475-b31f-60ef9917a8e5",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "#new-patient-coverage-request-staging",
+          "mode": "name"
+        },
+        "text": "=----*New Patient Coverage Request:*----\n*<{{$json.query.coverage_backoffice_url}}|{{$json.query.firstName}} {{$json.query.lastName}}>*\n<mailto:{{ $json.query.email }}|Email {{ $json.query.firstName }} {{$json.query.lastName}}>\n*Payer Id*: {{ $json.query.payer_id }}\n*Insurance:* {{ $json.query.insurance }}\n*Member Id*: {{ $json.query.member_id }}\n*DOB*: {{ $json.query.birthDate }} ",
+        "otherOptions": {}
+      },
+      "id": "0f66d3cc-d907-4791-acb4-ffce48d0192f",
+      "name": "Slack message in #new-patient-coverage-request",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "position": [
+        600,
+        260
+      ],
+      "credentials": {
+        "slackApi": {
+          "id": "2",
+          "name": "Slack account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook listening at POST /coverage": {
+      "main": [
+        [
+          {
+            "node": "Slack message in #new-patient-coverage-request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {},
+  "versionId": "4e819d3a-083c-4d32-a1e6-5f0749b86fb9",
+  "id": "3",
+  "meta": {
+    "instanceId": "123e36f33f867f0a0fea9f64123a61d8b4f89d564456cce6220f4dcc4a619a07"
+  },
+  "tags": [
+    {
+      "createdAt": "2023-08-04T16:18:35.638Z",
+      "updatedAt": "2023-08-04T16:18:35.638Z",
+      "id": "2",
+      "name": "new-coverage-request"
+    }
+  ]
+}
